@@ -5,18 +5,20 @@ MYOUTPUT := myoutput/
 CXX := g++
 CXX_FLAGS := -Wall -Wextra --std=c++20
 
-INPUT_FILES = $(wildcard $(INPUTS)*.txt)
-OUTPUT_FILES = $(wildcard $(OUTPUTS)*.txt)
-MAIN_FILE := helper.cpp
+INPUT_FILES := $(wildcard $(INPUTS)*.txt)
+OUTPUT_FILES := $(wildcard $(OUTPUTS)*.txt)
+MAIN_FILE := skyline.cpp
+EXEC := $(MAIN_FILE:.cpp=)
 MYOUTPUT_FILES := $(patsubst $(INPUTS)%, $(MYOUTPUT)%, $(INPUT_FILES:.txt=_out.txt))
 
-all: helper
+all: $(EXEC)
 
-helper: $(MAIN_FILE) $(INPUT_FILES)
+$(EXEC): $(MAIN_FILE) $(INPUT_FILES)
 	$(CXX) $(CXX_FLAGS) $< -o $@
 	./$@
+	rm -r $(EXEC)
 
 clean:
 	rm -f $(MYOUTPUT)*.txt
 
-.PHONY: all clean helper
+.PHONY: all clean $(EXEC)

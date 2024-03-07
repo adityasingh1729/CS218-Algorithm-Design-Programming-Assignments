@@ -23,7 +23,7 @@ class Point {
 
 };
 
-float findLength(vector<pair<Point, Point>> intervals)
+float findLength(vector<pair<Point, Point>> &intervals)
 {
 	float curr_x_max = 0;
 	float rsl = 0;
@@ -42,10 +42,13 @@ float findLength(vector<pair<Point, Point>> intervals)
 	return rsl;
 }
 
-// float findArea()
-// {
-// 	;
-// }
+float findArea(vector<pair<Point, Point>> &intervals)
+{
+	if (intervals[0].first.x == 0) {
+        
+	}
+	return 0;
+}
 
 int main()
 {
@@ -80,7 +83,7 @@ int main()
 
 
         float lengthCovered = findLength(posters);
-        float area = 0;
+        float area = findArea(posters);
 
         outputFile << static_cast<int>(lengthCovered) << endl;
         outputFile << static_cast<int>(area) << endl;
@@ -91,4 +94,3 @@ int main()
 
 	return 0;
 }
-
