@@ -27,7 +27,7 @@ class Point {
 int main(){
 	/* Enter your code here. Read input from STDIN. Print output to STDOUT */
 	
-	for (int fileIndex = 1; fileIndex <= 2; fileIndex++) {
+	for (int fileIndex = 1; fileIndex <= 10; fileIndex++) {
         string inputFileName = "inputs/input" + to_string(fileIndex) + ".txt";
         string outputFileName = "myoutput/out" + to_string(fileIndex) + ".txt";
 
