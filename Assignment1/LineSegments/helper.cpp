@@ -23,8 +23,32 @@ class Point {
 
 };
 
+float findLength(vector<pair<Point, Point>> intervals)
+{
+	float curr_x_max = 0;
+	float rsl = 0;
+	for (auto &interval: intervals) {
+		float l = interval.first.x;
+		float r = interval.second.x;
+		if (r > curr_x_max) {
+			if (l > curr_x_max) {
+				rsl += (r - l);
+			} else {
+				rsl += r - curr_x_max;
+			}
+			curr_x_max = r;
+		}
+	}
+	return rsl;
+}
 
-int main(){
+// float findArea()
+// {
+// 	;
+// }
+
+int main()
+{
 	/* Enter your code here. Read input from STDIN. Print output to STDOUT */
 	
 	for (int fileIndex = 1; fileIndex <= 10; fileIndex++) {
@@ -50,7 +74,12 @@ int main(){
             posters.push_back(make_pair(Point(a, b), Point(c, d)));
         }
 
-        float lengthCovered = 0;
+		std::sort(posters.begin(), posters.end(), [](const auto& p1, const auto& p2) {
+    	    return p1.first.x < p2.first.x;
+	    });
+
+
+        float lengthCovered = findLength(posters);
         float area = 0;
 
         outputFile << static_cast<int>(lengthCovered) << endl;
