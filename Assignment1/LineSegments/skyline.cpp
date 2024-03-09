@@ -92,17 +92,19 @@ vector<pair<Point, Point>> mergeSkylines(vector<pair<Point, Point>> &sl1, vector
     int size1 = sl1.size();
     int size2 = sl2.size();
     while (p1 < size1 && p2 < size2) {
-        pair<Point, Point> a = sl1[p1];
-        pair<Point, Point> b = sl2[p2];
-        pair<Point, Point> line1;
-        pair<Point, Point> line2;
-        if (a.first.x <= b.first.x) {
-            line1 = a;
-            line2 = b;
-        } else if (a.first.x > b.first.x) {
-            line1 = b;
-            line2 = a;
-        } 
+        pair<Point, Point> &a = sl1[p1];
+        pair<Point, Point> &b = sl2[p2];
+        // pair<Point, Point> line1;
+        // pair<Point, Point> line2;
+        // if (a.first.x <= b.first.x) {
+        //     line1 = a;
+        //     line2 = b;
+        // } else if (a.first.x > b.first.x) {
+        //     line1 = b;
+        //     line2 = a;
+        // } 
+        pair<Point, Point> &line1 = (a.first.x <= b.first.x) ? sl1[p1] : sl2[p2];
+        pair<Point, Point> &line2 = (a.first.x <= b.first.x) ? sl2[p2] : sl1[p1];
         if (line1.second.x <= line2.first.x) {
                 rsl.push_back(line1);
                 p1++;
@@ -228,9 +230,9 @@ vector<pair<Point, Point>> skyline(vector<pair<Point, Point>> &intervals, int i,
 vector<pair<Point, Point>> getSkyline(vector<pair<Point, Point>> &intervals)
 {
     vector<pair<Point, Point>> rsl = skyline(intervals, 0, intervals.size()-1);
-    for (auto &elem : rsl) {
-        cout << elem.first.x << "," << elem.first.y << " " << elem.second.x << "," << elem.second.y << endl;
-    }
+    // for (auto &elem : rsl) {
+    //     cout << elem.first.x << "," << elem.first.y << " " << elem.second.x << "," << elem.second.y << endl;
+    // }
     return rsl;
 }
 
@@ -247,7 +249,7 @@ int main()
 {
 	/* Enter your code here. Read input from STDIN. Print output to STDOUT */
 	
-	for (int fileIndex = 1; fileIndex <= 1; fileIndex++) {
+	for (int fileIndex = 1; fileIndex <= 10; fileIndex++) {
         string inputFileName = "inputs/input" + to_string(fileIndex) + ".txt";
         string outputFileName = "myoutput/out" + to_string(fileIndex) + ".txt";
 
