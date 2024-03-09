@@ -20,5 +20,6 @@ $(EXEC): $(MAIN_FILE) $(INPUT_FILES)
 
 clean:
 	rm -f $(MYOUTPUT)*.txt
+	rm -r $(EXEC)
 
 .PHONY: all clean $(EXEC)
