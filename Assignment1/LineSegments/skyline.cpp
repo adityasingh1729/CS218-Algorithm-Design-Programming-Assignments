@@ -110,7 +110,7 @@ vector<pair<Point, Point>> mergeSkylines(vector<pair<Point, Point>> &sl1, vector
             Point intersection = intersection_finder(line1, line2);
             if ((intersection.x == -1.000123 && intersection.y == -1.000123) || checkIntersection(line1, line2, intersection)) {
                 if (line1.second.x < line2.second.x) {
-                    if (line2.first.y >= y_coord_finder(line1, line2.first.x)) {
+                    if (line2.first.y > y_coord_finder(line1, line2.first.x) || (line2.first.y == y_coord_finder(line1, line2.first.x) && line1.second.y <= y_coord_finder(line2, line1.second.y))) {
                         Point Point1 = Point(line2.first.x, y_coord_finder(line1, line2.first.x));
                         rsl.push_back(make_pair(line1.first, Point1));
                         Point Point2 = Point(line1.second.x, y_coord_finder(line2, line1.second.x));
@@ -123,7 +123,7 @@ vector<pair<Point, Point>> mergeSkylines(vector<pair<Point, Point>> &sl1, vector
                         line2.first = Point(line1.second.x, y_coord_finder(line2, line1.second.x));
                     }
                 } else if (line1.second.x == line2.second.x) {
-                    if (line2.first.y >= y_coord_finder(line1, line2.first.x)) {
+                    if (line2.first.y > y_coord_finder(line1, line2.first.x) || (line2.first.y == y_coord_finder(line1, line2.first.x) && line1.second.y <= y_coord_finder(line2, line1.second.y))) {
                         Point Point1 = Point(line2.first.x, y_coord_finder(line1, line2.first.x));
                         rsl.push_back(make_pair(line1.first, Point1));
                         rsl.push_back(line2);
@@ -135,7 +135,7 @@ vector<pair<Point, Point>> mergeSkylines(vector<pair<Point, Point>> &sl1, vector
                         p2++;
                     }
                 } else {
-                    if (line2.first.y >= y_coord_finder(line1, line2.first.x)) {
+                    if (line2.first.y > y_coord_finder(line1, line2.first.x) || (line2.first.y == y_coord_finder(line1, line2.first.x) && line1.second.y <= y_coord_finder(line2, line1.second.y))) {
                         Point Point1 = Point(line2.first.x, y_coord_finder(line1, line2.first.x));
                         rsl.push_back(make_pair(line1.first, Point1));
                         rsl.push_back(line2);
