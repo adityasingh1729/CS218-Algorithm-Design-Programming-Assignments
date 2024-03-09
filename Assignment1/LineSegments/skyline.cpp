@@ -23,6 +23,8 @@ class Point {
 
 };
 
+/* FINDING THE LENGTH */
+
 float findLength(vector<pair<Point, Point>> &intervals)
 {
 	float curr_x_max = 0;
@@ -42,12 +44,33 @@ float findLength(vector<pair<Point, Point>> &intervals)
 	return rsl;
 }
 
-float findArea(vector<pair<Point, Point>> &intervals)
+/* FINDING THE AREA */
+
+vector<pair<Point, Point>> mergeSkylines(vector<pair<Point, Point>> &sl1, vector<pair<Point, Point>> &sl2)
 {
-	if (intervals[0].first.x == 0) {
-        
-	}
-	return 0;
+    
+}
+
+vector<pair<Point, Point>> skyline(vector<pair<Point, Point>> &intervals, int i, int j)
+{
+    if (i >= j) {
+        vector<pair<Point, Point>> rsl;
+        rsl.push_back(intervals[i]);
+        return rsl;
+    }
+    int mid = (i + j) / 2;
+    vector<pair<Point, Point>> sl1 = skyline(intervals, i, mid);
+    vector<pair<Point, Point>> sl2 = skyline(intervals, mid + 1, j);
+    return mergeSkylines(sl1, sl2);
+}
+
+float findArea(vector<pair<Point, Point>> &skyline)
+{
+    float rsl = 0;
+    for (auto &line : skyline) {
+        rsl += 0.5 * (line.first.y + line.second.y) * (line.second.x - line.first.x);
+    }
+	return rsl;
 }
 
 int main()
@@ -83,7 +106,8 @@ int main()
 
 
         float lengthCovered = findLength(posters);
-        float area = findArea(posters);
+        vector<pair<Point, Point>> sky_line = skyline(posters, 0, posters.size()-1);
+        float area = findArea(sky_line);
 
         outputFile << static_cast<int>(lengthCovered) << endl;
         outputFile << static_cast<int>(area) << endl;
