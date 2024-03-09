@@ -85,28 +85,11 @@ bool checkIntersection(pair<Point, Point> &line1, pair<Point, Point> &line2, Poi
     return true;
 }
 
-vector<pair<Point, Point>> mergeSkylines(vector<pair<Point, Point>> &sl1, vector<pair<Point, Point>> &sl2)
+void whileLoopTask(pair<Point, Point> &line1, pair<Point, Point> &line2, vector<pair<Point, Point>> &rsl, int *p1, int *p2)
 {
-    int p1 = 0, p2 = 0;
-    vector<pair<Point, Point>> rsl;
-    int size1 = sl1.size();
-    int size2 = sl2.size();
-    cout << "Hello" << endl;
-    while (p1 < size1 && p2 < size2) {
-        pair<Point, Point> a = sl1[p1];
-        pair<Point, Point> b = sl2[p2];
-        pair<Point, Point> line1;
-        pair<Point, Point> line2;
-        if (a.first.x <= b.first.x) {
-            line1 = a;
-            line2 = b;
-        } else if (a.first.x > b.first.x) {
-            line1 = b;
-            line2 = a;
-        } 
-        if (line1.second.x <= line2.first.x) {
+    if (line1.second.x <= line2.first.x) {
                 rsl.push_back(line1);
-                p1++;
+                *p1++;
         } else {
             Point intersection = intersection_finder(line1, line2);
             if ((intersection.x == -1.000123 && intersection.y == -1.000123) || checkIntersection(line1, line2, intersection)) {
@@ -117,10 +100,10 @@ vector<pair<Point, Point>> mergeSkylines(vector<pair<Point, Point>> &sl1, vector
                         Point Point2 = Point(line1.second.x, y_coord_finder(line2, line1.second.x));
                         rsl.push_back(make_pair(line2.first, Point2));
                         line2.first = Point2;
-                        p1++;
+                        *p1++;
                     } else {
                         rsl.push_back(line1);
-                        p1++;
+                        *p1++;
                         line2.first = Point(line1.second.x, y_coord_finder(line2, line1.second.x));
                     }
                 } else if (line1.second.x == line2.second.x) {
@@ -128,12 +111,12 @@ vector<pair<Point, Point>> mergeSkylines(vector<pair<Point, Point>> &sl1, vector
                         Point Point1 = Point(line2.first.x, y_coord_finder(line1, line2.first.x));
                         rsl.push_back(make_pair(line1.first, Point1));
                         rsl.push_back(line2);
-                        p1++;
-                        p2++;
+                        *p1++;
+                        *p2++;
                     } else {
                         rsl.push_back(line1);
-                        p1++;
-                        p2++;
+                        *p1++;
+                        *p2++;
                     }
                 } else {
                     if (line2.first.y >= y_coord_finder(line1, line2.first.x)) {
@@ -141,13 +124,13 @@ vector<pair<Point, Point>> mergeSkylines(vector<pair<Point, Point>> &sl1, vector
                         rsl.push_back(make_pair(line1.first, Point1));
                         rsl.push_back(line2);
                         Point Point2 = Point(line2.second.x, y_coord_finder(line1, line2.second.x));
-                        p2++;
+                        *p2++;
                         line1.first = Point2;
                     } else {
                         Point Point1 = Point(line2.second.x, y_coord_finder(line1, line2.second.x));
                         rsl.push_back(make_pair(line1.first, Point1));
                         line1.first = Point1;
-                        p2++;
+                        *p2++;
                     }
                 }
             } else {
@@ -157,13 +140,13 @@ vector<pair<Point, Point>> mergeSkylines(vector<pair<Point, Point>> &sl1, vector
                         rsl.push_back(make_pair(line1.first, Point1));
                         rsl.push_back(make_pair(line2.first, intersection));
                         rsl.push_back(make_pair(intersection, line1.second));
-                        p1++;
+                        *p1++;
                         line2.first = Point(line1.second.x, y_coord_finder(line2, line1.second.x));
                     } else {
                         rsl.push_back(make_pair(line1.first, intersection));
                         Point Point1 = Point(line1.second.x, y_coord_finder(line2, line1.second.x));
                         rsl.push_back(make_pair(intersection, Point1));
-                        p1++;
+                        *p1++;
                         line2.first = Point1;
                     }
                 } else if (line1.second.x == line2.second.x) {
@@ -172,13 +155,13 @@ vector<pair<Point, Point>> mergeSkylines(vector<pair<Point, Point>> &sl1, vector
                         rsl.push_back(make_pair(line1.first, Point1));
                         rsl.push_back(make_pair(line2.first, intersection));
                         rsl.push_back(make_pair(intersection, line1.second));
-                        p1++;
-                        p2++;
+                        *p1++;
+                        *p2++;
                     } else {
                         rsl.push_back(make_pair(line1.first, intersection));
                         rsl.push_back(make_pair(intersection, line2.second));
-                        p1++;
-                        p2++;
+                        *p1++;
+                        *p2++;
                     }
                 } else {
                     if (line2.first.y >= y_coord_finder(line1, line2.first.x)) {
@@ -187,16 +170,30 @@ vector<pair<Point, Point>> mergeSkylines(vector<pair<Point, Point>> &sl1, vector
                         rsl.push_back(make_pair(line2.first, intersection));
                         Point Point2 = Point(line2.second.x, y_coord_finder(line1, line2.second.x));
                         rsl.push_back(make_pair(intersection, Point2));
-                        p2++;
+                        *p2++;
                         line1.first = Point2;
                     } else {
                         rsl.push_back(make_pair(line1.first, intersection));
                         rsl.push_back(make_pair(intersection, line2.second));
-                        p2++;
+                        *p2++;
                         line1.first = Point(line2.second.x, y_coord_finder(line1, line2.second.x));
                     }
                 }
             }
+        }
+}
+
+vector<pair<Point, Point>> mergeSkylines(vector<pair<Point, Point>> &sl1, vector<pair<Point, Point>> &sl2)
+{
+    int p1 = 0, p2 = 0;
+    vector<pair<Point, Point>> rsl;
+    int size1 = sl1.size();
+    int size2 = sl2.size();
+    while (p1 < size1 && p2 < size2) {
+        if (sl1[p1].first.x <= sl2[p2].first.x) {
+            whileLoopTask(sl1[p1], sl2[p2], rsl, &p1, &p2);    
+        } else {
+            whileLoopTask(sl2[p2], sl1[p1], rsl, &p1, &p2);
         }
     }
     if (p1 == size1) {
