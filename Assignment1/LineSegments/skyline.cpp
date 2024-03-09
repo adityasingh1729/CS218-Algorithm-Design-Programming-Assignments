@@ -91,6 +91,7 @@ vector<pair<Point, Point>> mergeSkylines(vector<pair<Point, Point>> &sl1, vector
     vector<pair<Point, Point>> rsl;
     int size1 = sl1.size();
     int size2 = sl2.size();
+    cout << "Hello" << endl;
     while (p1 < size1 && p2 < size2) {
         pair<Point, Point> a = sl1[p1];
         pair<Point, Point> b = sl2[p2];
