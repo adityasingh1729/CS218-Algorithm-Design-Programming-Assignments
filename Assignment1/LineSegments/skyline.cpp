@@ -9,29 +9,29 @@ using namespace std;
 
 class Point {
  public:
-  float x;
-  float y;
+  double x;
+  double y;
 
  public:
   Point()
       : x(0), y(0) {}  // Default constructor initializing coordinates to (0,0)
-  Point(float xVal, float yVal)
+  Point(double xVal, double yVal)
       : x(xVal), y(yVal) {}  // Parameterized constructor
 
-  float X() const { return x; }  // Accessor for x coordinate
-  float Y() const { return y; }  // Accessor for y coordinate
+  double X() const { return x; }  // Accessor for x coordinate
+  double Y() const { return y; }  // Accessor for y coordinate
 
 };
 
 /* FINDING THE LENGTH */
 
-float findLength(vector<pair<Point, Point>> &intervals)
+double findLength(vector<pair<Point, Point>> &intervals)
 {
-	float curr_x_max = 0;
-	float rsl = 0;
+	double curr_x_max = 0;
+	double rsl = 0;
 	for (auto &interval: intervals) {
-		float l = interval.first.x;
-		float r = interval.second.x;
+		double l = interval.first.x;
+		double r = interval.second.x;
 		if (r > curr_x_max) {
 			if (l > curr_x_max) {
 				rsl += (r - l);
@@ -46,34 +46,34 @@ float findLength(vector<pair<Point, Point>> &intervals)
 
 /* FINDING THE AREA */
 
-float mFinder(pair<Point, Point> &line)
+double mFinder(pair<Point, Point> &line)
 {
-    return (float) (line.second.y - line.first.y) / (line.second.x - line.first.x);
+    return (double) (line.second.y - line.first.y) / (line.second.x - line.first.x);
 }
 
-float cFinder(pair<Point, Point> &line)
+double cFinder(pair<Point, Point> &line)
 {
-    return (float) ((line.first.y) * (line.second.x) - (line.first.x) * (line.second.y))/(line.second.x - line.first.x);
+    return (double) ((line.first.y) * (line.second.x) - (line.first.x) * (line.second.y))/(line.second.x - line.first.x);
 }
 
-float y_coord_finder(pair<Point, Point> &line, float x_coord)
+double y_coord_finder(pair<Point, Point> &line, double x_coord)
 {
-    float m = mFinder(line);
-    float c = cFinder(line);
+    double m = mFinder(line);
+    double c = cFinder(line);
     return m * x_coord + c;
 }
 
 Point intersection_finder(pair<Point, Point> &line1, pair<Point, Point> &line2)
 {
-    float m1 = mFinder(line1);
-    float m2 = mFinder(line2);
-    float c1 = cFinder(line1);
-    float c2 = cFinder(line2);
+    double m1 = mFinder(line1);
+    double m2 = mFinder(line2);
+    double c1 = cFinder(line1);
+    double c2 = cFinder(line2);
     if (m1 == m2) {
         return (Point(-1.000123, -1.000123));
     }
-    float x_coord = (c2 - c1) / (m1 - m2);
-    float y_coord = (m1 * c2 - m2 * c1) / (m1 - m2);
+    double x_coord = (c2 - c1) / (m1 - m2);
+    double y_coord = (m1 * c2 - m2 * c1) / (m1 - m2);
     return Point(x_coord, y_coord);
 }
 
@@ -236,9 +236,9 @@ vector<pair<Point, Point>> getSkyline(vector<pair<Point, Point>> &intervals)
     return rsl;
 }
 
-float findArea(vector<pair<Point, Point>> &skyline)
+double findArea(vector<pair<Point, Point>> &skyline)
 {
-    float rsl = 0;
+    double rsl = 0;
     for (auto &line : skyline) {
         rsl += 0.5 * (line.first.y + line.second.y) * (line.second.x - line.first.x);
     }
@@ -263,7 +263,7 @@ int main()
 
         int n;
         inputFile >> n;
-        float a, b, c, d;
+        double a, b, c, d;
 
         vector<pair<Point, Point>> posters;
 
@@ -277,9 +277,9 @@ int main()
 	    });
 
 
-        float lengthCovered = findLength(posters);
+        double lengthCovered = findLength(posters);
         vector<pair<Point, Point>> sky_line = getSkyline(posters);
-        float area = findArea(sky_line);
+        double area = findArea(sky_line);
 
         outputFile << static_cast<int>(lengthCovered) << endl;
         outputFile << static_cast<int>(area) << endl;
