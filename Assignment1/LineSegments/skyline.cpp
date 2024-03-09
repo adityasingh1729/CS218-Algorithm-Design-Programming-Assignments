@@ -46,9 +46,154 @@ float findLength(vector<pair<Point, Point>> &intervals)
 
 /* FINDING THE AREA */
 
+float mFinder(pair<Point, Point> &line)
+{
+    return (line.second.y - line.first.y) / (line.second.x - line.first.x);
+}
+
+float cFinder(pair<Point, Point> &line)
+{
+    return ((line.first.y) * (line.second.x) - (line.first.x) * (line.second.y))/(line.second.x - line.first.x);
+}
+
+float y_coord_finder(pair<Point, Point> &line, float x_coord)
+{
+    float m = mFinder(line);
+    float c = cFinder(line);
+    return m * x_coord + c;
+}
+
+Point intersection_finder(pair<Point, Point> &line1, pair<Point, Point> &line2)
+{
+    float m1 = mFinder(line1);
+    float m2 = mFinder(line2);
+    float c1 = cFinder(line1);
+    float c2 = cFinder(line2);
+    if (m1 == m2) {
+        return (Point(-1.123, -1.123));
+    }
+    float x_coord = (c2 - c1) / (m2 - m1);
+    float y_coord = y_coord_finder(line1, x_coord);
+    return Point(x_coord, y_coord);
+}
+
+bool checkIntersection(pair<Point, Point> &line1, pair<Point, Point> &line2, Point &intersection)
+{
+    if ((intersection.x > line1.first.x && intersection.x < line1.second.x) && (intersection.x > line2.first.x && intersection.x > line2.second.x)) {
+        return false;
+    }
+    return true;
+}
+
 vector<pair<Point, Point>> mergeSkylines(vector<pair<Point, Point>> &sl1, vector<pair<Point, Point>> &sl2)
 {
-    
+    float height1 = 0, height2 = 0;
+    int p1 = 0, p2 = 0;
+    Point trivial = Point(-1,-1);
+    vector<pair<Point, Point>> rsl;
+    while (p1 < sl1.size() && p2 < sl2.size()) {
+        pair<Point, Point> line1 = sl1[p1];
+        pair<Point, Point> line2 = sl2[p2];
+        if (line1.first.x <= line2.first.x) {
+            if (line1.second.x <= line2.first.x) {
+                rsl.push_back(line1);
+                p1++;
+                continue;
+            } else {
+                Point intersection = intersection_finder(line1, line2);
+                if ((intersection.x == -1.123 && intersection.y == -1.123) || checkIntersection(line1, line2, intersection)) {
+                    if (line1.second.x < line2.second.x) {
+                        if (line2.first.y >= y_coord_finder(line1, line2.first.x)) {
+                            Point Point1 = Point(line2.first.x, y_coord_finder(line1, line2.first.x));
+                            rsl.push_back(make_pair(line1.first, Point1));
+                            Point Point2 = Point(line1.second.x, y_coord_finder(line2, line1.second.x));
+                            rsl.push_back(make_pair(line2.first, Point2));
+                            line2.first = Point2;
+                            p1++;
+                        } else {
+                            rsl.push_back(line1);
+                            p1++;
+                            line2.first = Point(line1.second.x, y_coord_finder(line2, line1.second.x));
+                        }
+                    } else if (line1.second.x == line2.second.x) {
+                        if (line2.first.y >= y_coord_finder(line1, line2.first.x)) {
+                            Point Point1 = Point(line2.first.x, y_coord_finder(line1, line2.first.x));
+                            rsl.push_back(make_pair(line1.first, Point1));
+                            rsl.push_back(line2);
+                            p1++;
+                            p2++;
+                        } else {
+                            rsl.push_back(line1);
+                            p1++;
+                            p2++;
+                        }
+                    } else {
+                        if (line2.first.y >= y_coord_finder(line1, line2.first.x)) {
+                            Point Point1 = Point(line2.first.x, y_coord_finder(line1, line2.first.x));
+                            rsl.push_back(make_pair(line1.first, Point1));
+                            rsl.push_back(line2);
+                            Point Point2 = Point(line2.second.x, y_coord_finder(line1, line2.second.x));
+                            p2++;
+                            line1.first = Point2;
+                        } else {
+                            Point Point1 = Point(line2.second.x, y_coord_finder(line1, line2.second.x));
+                            rsl.push_back(make_pair(line1.first, Point1));
+                            line1.first = Point1;
+                            p2++;
+                        }
+                    }
+                } else {
+                    if (line1.second.x < line2.second.x) {
+                        if (line2.first.y >= y_coord_finder(line1, line2.first.x)) {
+                            Point Point1 = Point(line2.first.x, y_coord_finder(line1, line2.first.x));
+                            rsl.push_back(make_pair(line1.first, Point1));
+                            rsl.push_back(make_pair(line2.first, intersection));
+                            rsl.push_back(make_pair(intersection, line1.second));
+                            p1++;
+                            line2.first = Point(line1.second.x, y_coord_finder(line2, line1.second.x));
+                        } else {
+                            rsl.push_back(make_pair(line1.first, intersection));
+                            Point Point1 = Point(line1.second.x, y_coord_finder(line2, line1.second.x));
+                            rsl.push_back(make_pair(intersection, Point1));
+                            p1++;
+                            line2.first = Point1;
+                        }
+                    } else if (line1.second.x == line2.second.x) {
+                        if (line2.first.y >= y_coord_finder(line1, line2.first.x)) {
+                            Point Point1 = Point(line2.first.x, y_coord_finder(line1, line2.first.x));
+                            rsl.push_back(make_pair(line1.first, Point1));
+                            rsl.push_back(make_pair(line2.first, intersection));
+                            rsl.push_back(make_pair(intersection, line1.second));
+                            p1++;
+                            p2++;
+                        } else {
+                            rsl.push_back(make_pair(line1.first, intersection));
+                            rsl.push_back(make_pair(intersection, line2.second));
+                            p1++;
+                            p2++;
+                        }
+                    } else {
+                        if (line2.first.y >= y_coord_finder(line1, line2.first.x)) {
+                            Point Point1 = Point(line2.first.x, y_coord_finder(line1, line2.first.x));
+                            rsl.push_back(make_pair(line1.first, Point1));
+                            rsl.push_back(make_pair(line2.first, intersection));
+                            Point Point2 = Point(line2.second.x, y_coord_finder(line1, line2.second.x));
+                            rsl.push_back(make_pair(intersection, Point2));
+                            p2++;
+                            line1.first = Point2;
+                        } else {
+                            rsl.push_back(make_pair(line1.first, intersection));
+                            rsl.push_back(make_pair(intersection, line2.second));
+                            p2++;
+                            line1.first = Point(line2.second.x, y_coord_finder(line1, line2.second.x));
+                        }
+                    }
+                }
+            }
+        } else {
+
+        }
+    }
 }
 
 vector<pair<Point, Point>> skyline(vector<pair<Point, Point>> &intervals, int i, int j)
@@ -115,6 +260,5 @@ int main()
         inputFile.close();
         outputFile.close();
     }
-
 	return 0;
 }
