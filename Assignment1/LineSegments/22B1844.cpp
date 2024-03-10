@@ -227,7 +227,6 @@ vector<pair<Point, Point> > getSkyline(vector<pair<Point, Point> > &intervals)
 double findArea(vector<pair<Point, Point> > &skyline)
 {
     double rsl = 0;
-    // for (auto &line : skyline) {
     for (int i = 0; i < skyline.size(); i++) {
         pair<Point, Point> line = skyline[i];
         rsl += 0.5 * (line.first.y + line.second.y) * (line.second.x - line.first.x);
@@ -253,10 +252,6 @@ int main()
         cin >> a >> b >> c >> d;
         posters.push_back(make_pair(Point(a, b), Point(c, d)));
     }
-
-    // std::sort(posters.begin(), posters.end(), [](const auto& p1, const auto& p2) {
-    //     return p1.first.x < p2.first.x;
-    // });
 
     std::sort(posters.begin(), posters.end(), compareFirstX);
 
